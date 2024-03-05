@@ -5,7 +5,7 @@ class InheritedStockPickingBatch(models.Model):
     _rec_name_search = ['complete_name']
 
     max_weight=fields.Float(string="Max Weight(Kg)")
-    max_volume=fields.Float(string="Max Volume(cubic meters)")
+    max_volume=fields.Float(string="Max Volume(㎥)")
     
 
     @api.depends('max_weight', 'max_volume')

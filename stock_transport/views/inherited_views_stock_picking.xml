@@ -35,19 +35,29 @@
         <field name="arch" type="xml">
             <gantt 
                 string="Stock Picking Batch" 
-                sample="1" 
-                default_scale="week"
+                sample="1"
                 date_stop="scheduled_date" 
-                date_start="scheduled_date" 
+                date_start="create_date" 
                 default_group_by="dock_id,vehicle_id" 
                 decoration-info="state=='draft'"
                 decoration-success="state=='done'"
-                precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
                 color="dock_id"
                 >
                 <field name="state" invisible="1"/>
                 <field name="scheduled_date"/>
+                <field name="create_date"/>
             </gantt>
+        </field>
+    </record>
+
+    <record id="inherited_stock_picking_view_tree" model="ir.ui.view">
+        <field name="name">stock_picking.tree.inherited</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="volume" />
+            </xpath>
         </field>
     </record>
 </odoo>
