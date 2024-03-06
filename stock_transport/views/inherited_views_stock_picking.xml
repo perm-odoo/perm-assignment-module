@@ -6,8 +6,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='scheduled_date']" position="after">
                 <field name="dock_id"/>
-                <field name="vehicle_id"/>
-                <field name="vehicle_category_id"/>
+                <field name="vehicle_id" placehoder="Third Party Provider"/>
+                <field name="vehicle_category_id" placeholder="e.g Semi-Truck"/>
                 <field name="weight" widget="progressbar"/>
                 <field name="volume" widget="progressbar"/>
             </xpath>

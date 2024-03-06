@@ -16,7 +16,7 @@ class InheritedStockPickingBatch(models.Model):
             record.display_name = f"{record.name} ({record.weight}kg, {record.volume}㎥) - {record.vehicle_id.driver_id.name}"
 
 
-    @api.depends("vehicle_category_id.max_volume", "picking_ids")
+    @api.depends("vehicle_category_id.max_volume", "picking_ids.move_ids_without_package.product_id.volume", "picking_ids.move_ids_without_package")
     def _compute_total_volume(self):
         for batch in self:
             total = 0
@@ -25,11 +25,13 @@ class InheritedStockPickingBatch(models.Model):
                     total = total + (product.product_id.volume) * (product.quantity)
 
             if(batch.vehicle_category_id.max_volume!=0):
-                batch.volume = round(100 * (total / batch.vehicle_category_id.max_volume))
+                batch.volume = 100 * (total / batch.vehicle_category_id.max_volume)
+
             else:
                 batch.volume = 0
+            
 
-    @api.depends("vehicle_category_id.max_weight", "picking_ids")
+    @api.depends("vehicle_category_id.max_weight", "picking_ids.move_ids_without_package.product_id.weight", "picking_ids.move_ids_without_package")
     def _compute_total_weight(self):
         for batch in self:
             total = 0
@@ -38,6 +40,8 @@ class InheritedStockPickingBatch(models.Model):
                     total = total + (stock_move.product_id.weight) * (stock_move.quantity)
 
             if(batch.vehicle_category_id.max_weight!=0):
-                batch.weight = round(100 * (total / batch.vehicle_category_id.max_weight))
+                batch.weight = 100 * (total / batch.vehicle_category_id.max_weight)
             else:
                 batch.weight = 0
+
+            print(total)

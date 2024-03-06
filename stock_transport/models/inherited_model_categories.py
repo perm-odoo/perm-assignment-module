@@ -5,10 +5,10 @@ class InheritedStockPickingBatch(models.Model):
     _rec_name_search = ['complete_name']
 
     max_weight=fields.Float(string="Max Weight(Kg)")
-    max_volume=fields.Float(string="Max Volume(㎥)")
+    max_volume=fields.Float(string="Max Volume(\u33A5)")
     
 
     @api.depends('max_weight', 'max_volume')
     def _compute_display_name(self):
         for record in self:
-            record.display_name = f"{record.name} ({record.max_weight}kg, {record.max_volume}㎥)"
+            record.display_name = f"{record.name} ({record.max_weight}kg, {record.max_volume}\u33A5)"
