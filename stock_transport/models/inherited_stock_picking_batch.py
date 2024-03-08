@@ -8,12 +8,14 @@ class InheritedStockPickingBatch(models.Model):
     vehicle_category_id=fields.Many2one('fleet.vehicle.model.category', string='Vehicle Category')
     weight=fields.Float(compute="_compute_total_weight", store=True)
     volume=fields.Float(compute="_compute_total_volume", store=True)
+    total_weight=fields.Float(compute="_compute_total_weight", store=True)
+    total_volume=fields.Float(compute="_compute_total_volume", store=True)
 
     @api.depends("weight", "volume")
     def _compute_display_name(self):
 
         for record in self:
-            record.display_name = f"{record.name} ({record.weight}kg, {record.volume}㎥) - {record.vehicle_id.driver_id.name}"
+            record.display_name = f"{record.name} ({round(record.weight)}kg, {round(record.volume)}㎥) - {record.vehicle_id.driver_id.name}"
 
 
     @api.depends("vehicle_category_id.max_volume", "picking_ids.move_ids_without_package.product_id.volume", "picking_ids.move_ids_without_package")
@@ -26,9 +28,11 @@ class InheritedStockPickingBatch(models.Model):
 
             if(batch.vehicle_category_id.max_volume!=0):
                 batch.volume = 100 * (total / batch.vehicle_category_id.max_volume)
+                batch.total_volume = total
 
             else:
                 batch.volume = 0
+                batch.total_volume = 0
             
 
     @api.depends("vehicle_category_id.max_weight", "picking_ids.move_ids_without_package.product_id.weight", "picking_ids.move_ids_without_package")
@@ -41,7 +45,9 @@ class InheritedStockPickingBatch(models.Model):
 
             if(batch.vehicle_category_id.max_weight!=0):
                 batch.weight = 100 * (total / batch.vehicle_category_id.max_weight)
+                batch.total_weight = total
             else:
                 batch.weight = 0
+                batch.total_weight = 0
 
             print(total)

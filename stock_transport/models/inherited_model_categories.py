@@ -11,4 +11,4 @@ class InheritedStockPickingBatch(models.Model):
     @api.depends('max_weight', 'max_volume')
     def _compute_display_name(self):
         for record in self:
-            record.display_name = f"{record.name} ({record.max_weight}kg, {record.max_volume}\u33A5)"
+            record.display_name = f"{record.name} ({round(record.max_weight)}kg, {round(record.max_volume)}\u33A5)"
